@@ -1,13 +1,14 @@
-import mysql.connector
+import sqlite3
 
 
 def conecta_banco():
-    conexao = mysql.connector.connect(
-    host='localhost',
-    user='admin',
-    passwd='admin',
-    db='db_clientes'
-    )
+    conexao = sqlite3.connect('programa.db')
+    cursor = conexao.cursor()
+    cursor.execute('''CREATE TABLE IF NOT EXISTS clientes(
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                nome TEXT NOT NULL,
+                endereco TEXT NOT NULL,
+                cpf TEXT NOT NULL)''')
 
     return conexao
 
@@ -16,7 +17,7 @@ def cadastrar_clientes(nome, endereco, cpf):
     conexao = conecta_banco()
 
     val = (nome, endereco, cpf)
-    sql = 'INSERT INTO clientes(nome, endereco, cpf) VALUE (%s, %s, %s)'
+    sql = 'INSERT INTO clientes(nome, endereco, cpf) VALUES (?, ?, ?)'
 
     cursor = conexao.cursor()
     cursor.execute(sql, val)
@@ -29,7 +30,7 @@ def cadastrar_clientes(nome, endereco, cpf):
 def pesquisar_clinte(cpf=None):
     conexao = conecta_banco()
 
-    sql = f"SELECT * FROM clientes WHERE cpf LIKE '%{cpf}%'"
+    sql = "SELECT * FROM clientes WHERE cpf LIKE 'cpf'"
 
     cursor = conexao.cursor()
     cursor.execute(sql)

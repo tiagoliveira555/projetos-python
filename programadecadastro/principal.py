@@ -1,5 +1,6 @@
-from funcoes import *
-from banco import *
+from gerente import *
+from tela import *
+
 
 while True:
     limpaTela()
@@ -15,14 +16,7 @@ while True:
         break
 
     elif resposta == 1:
-        limpaTela()
-        cabecalho('CADASTRO DE CLIENTES')
-
-        nome = str(input('Nome: '))
-        endereco = str(input('Endereço: '))
-        cpf = str(input('CPF: '))
-
-        cadastrar_clientes(nome, endereco, cpf)
+        cadastrar()
 
     elif resposta == 2:
         limpaTela()

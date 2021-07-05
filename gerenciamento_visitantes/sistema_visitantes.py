@@ -15,72 +15,116 @@ class visitantes:
         print(8 * '##', 'PESQUISAR VISITANTE', 8 * '##')
         print('DIGITE C SE QUISER CANCELAR E VOLTAR PARA O MENU')
 
-    def cadastrar(self):
-        rodando = True
-        while rodando:
-            print(8 * '##', 8 * '##')
-            print(8 * '##', 'CADASTRAR VISITANTES', 8 * '##')
-            print('DIGITE C SE QUISER CANCELAR E VOLTAR PARA O MENU')
+        nome = input('Nome para pesquisar: ').strip().upper()
+        if len(nome) != 0 and nome != 'C':
+            db = sqlite3.connect('conexao.db')
+            cursor = db.cursor()
+            cursor.execute('SELECT * FROM visitantes')
+            lista = cursor.fetchall()
+            for i in lista:
+                if nome in i:
+                    print('Esse visitante já possui cadastro!, i')
+                    time.sleep(2)
+                    update = input('Você deseja atualizar-lo? [S/N] ').upper()
+                    if update == 'S':
+                        self.nome = i[1]
+                        self.empresa = i[2]
+                        self.doc = i[3]
+                        hora_e_date = int(time.time())
+                        self.hora = str(datetime.datetime.fromtimestamp(hora_e_date).strftime('%Y-%m-%d %H:%M:%S'))
+                        self.apt = input('Apt: ').strip().upper()
 
-            temp_name = input('Nome: ').strip().upper()
-            if len(temp_name) >= 4 and temp_name != 'C':
-                db = sqlite3.connect('conexao.db')
-                cursor = db.cursor()
-                cursor.execute('SELECT id, nome FROM visitantes')
-                lista = cursor.fetchall()
-                for i in lista:
-                    if temp_name in i:
-                        print('Esse visitante já possui cadastro!')
-                        time.sleep(2)
+                        cursor.execute('''INSERT INTO visitantes
+                                        (nome, empresa, doc, hora, apt) VALUES (?, ?, ?, ?, ?)''',
+                                        (self.nome, self.empresa, self.doc, self.hora, self.apt))
+                        print()
+                        print('Cadastro realizado com sucesso!')
+                        time.sleep(1)
+                        db.commit()
+                        db.close()
+                        break
+
+                    else:
+                        print('Esse visitante não possui cadastro!')
+                        p = input('Você deseja cadastra-lo? ')
+                        time.sleep(1)
+                        self.cadastrar()
+
+        elif nome == 'C':
+            print('Indo para tela principal')
+            self.menu()
+
+
+        else:
+            print('Voltando para o Menu Prinicipal')
+            self.menu()
+
+    def cadastrar(self):
+            rodando = True
+            while rodando:
+                print(8 * '##', 8 * '##')
+                print(8 * '##', 'CADASTRAR VISITANTES', 8 * '##')
+                print('DIGITE C SE QUISER CANCELAR E VOLTAR PARA O MENU')
+
+                temp_name = input('Nome: ').strip().upper()
+                if len(temp_name) >= 4 and temp_name != 'C':
+                    db = sqlite3.connect('conexao.db')
+                    cursor = db.cursor()
+                    cursor.execute('SELECT id, nome FROM visitantes')
+                    lista = cursor.fetchall()
+                    for i in lista:
+                        if temp_name in i:
+                            print('Esse visitante já possui cadastro!')
+                            time.sleep(2)
+                            self.menu()
+
+                    self.nome = temp_name
+                    temp_name = ''
+                    time.sleep(0.6)
+                    self.empresa = input('Empresa: ').strip().upper()
+                    time.sleep(0.6)
+                    self.doc = input('Documento: ').strip().upper()
+                    time.sleep(0.6)
+                    hora_e_date = int(time.time())
+                    self.hora = str(datetime.datetime.fromtimestamp(hora_e_date).strftime('%Y-%m-%d %H:%M:%S'))
+                    time.sleep(0.6)
+                    self.apt = input('Apt: ').strip().upper()
+                    time.sleep(0.6)
+
+                    cursor.execute('''INSERT INTO visitantes
+                                    (nome, empresa, doc, hora, apt) VALUES (?, ?, ?, ?, ?)''',
+                                    (self.nome, self.empresa, self.doc, self.hora, self.apt))
+                    print()
+                    print('Cadastro realizado com sucesso!')
+                    time.sleep(1)
+                    db.commit()
+
+                    adicionar_mais = input('Você deseja continuar cadastrando? [S/N] ').upper()
+                    if adicionar_mais == 'S':
+                        continue
+                    else:
+                        rodando = False
+                        db.close()
+                        print('Voltando para a tela principal!')
+                        time.sleep(1)
                         self.menu()
 
-                self.nome = temp_name
-                temp_name = ''
-                time.sleep(0.6)
-                self.empresa = input('Empresa: ').strip().upper()
-                time.sleep(0.6)
-                self.doc = input('Documento: ').strip().upper()
-                time.sleep(0.6)
-                hora_e_date = int(time.time())
-                self.hora = str(datetime.datetime.fromtimestamp(hora_e_date).strftime('%Y-%m-%d %H:%M:%S'))
-                time.sleep(0.6)
-                self.apt = input('Apt: ').strip().upper()
-                time.sleep(0.6)
-
-                cursor.execute('''INSERT INTO visitantes
-                                (nome, empresa, doc, hora, apt) VALUES (?, ?, ?, ?, ?)''',
-                                (self.nome, self.empresa, self.doc, self.hora, self.apt))
-                print()
-                print('Cadastro realizado com sucesso!')
-                time.sleep(1)
-                db.commit()
-
-                adicionar_mais = input('Você deseja continuar cadastrando? [S/N] ').upper()
-                if adicionar_mais == 'S':
-                    continue
-                else:
-                    rodando = False
-                    db.close()
-                    print('Voltando para a tela principal!')
-                    time.sleep(1)
+                elif temp_name == 'C':
+                    print('Voltando para o Menu Principal')
+                    time.sleep(2)
                     self.menu()
 
-            elif temp_name == 'C':
-                print('Voltando para o Menu Principal')
-                time.sleep(2)
-                self.menu()
+                elif len(temp_name) <= 3:
+                    print('Não é permitido campos com mínimo de 3')
+                    self.cadastrar()
 
-            elif len(temp_name) <= 3:
-                print('Não é permitido campos com mínimo de 3')
-                self.cadastrar()
+                elif temp_name == '':
+                    print('Preencha os campos corretamente.')
+                    self.cadastrar()
 
-            elif temp_name == '':
-                print('Preencha os campos corretamente.')
-                self.cadastrar()
-
-            else:
-                print('NÃO FOI POSSÍVEL CADASTRAR, TENTE NOVAMENTE!')
-                self.cadastrar()
+                else:
+                    print('NÃO FOI POSSÍVEL CADASTRAR, TENTE NOVAMENTE!')
+                    self.cadastrar()
 
     def editar(self):
         print('-------------------------------------------------------------')
@@ -126,8 +170,10 @@ class visitantes:
                 print('Apartamento atualizado com sucesso!')
                 time.sleep(0.5)
 
+            else:
+                print('Voltando para o Menu Principal')
+                time.sleep(2)
                 self.menu()
-
         else:
             print('Voltando para o Menu Principal')
             time.sleep(2)
@@ -142,8 +188,6 @@ class visitantes:
         cursor = db.cursor()
         cursor.execute('SELECT * FROM visitantes')
         lista = cursor.fetchall()
-        lista = lista[-5:]
-        lista.reverse()
         for i in lista:
             print(f'{i[0]:<5}{i[1]:<20}{i[2]:<22}{i[3]:<20}{i[4]:<30}{i[5]:<6}')
 
@@ -163,45 +207,75 @@ class visitantes:
             self.menu()
 
     def deletar(self):
-        pass
+        print('-------------------------------------------------------------')
+        print('----------- DELETAR VISITANTES CADASTRADOS ---------')
+        print('_____________________________________________________________')
+
+        id_visitante = input("Digite o ID que deseja apagar: ")
+
+        confirma = input('Você tem certeza que deseja apagar? [S/N] ').lower()
+        if confirma == 's':
+            db = sqlite3.connect('conexao.db')
+            cursor = db.cursor()
+            cursor.execute('''DELETE FROM visitantes WHERE id=?''', (id_visitante,))
+            db.commit()
+            print('APAGADO COM SUCESSO!')
+            time.sleep(0.5)
+            self.menu()
+
+        else:
+            print('Voltando para o Menu Principal')
+            time.seep(0.5)
+            self.menu()
 
     def sair(self):
-        pass
+        confirma = input('Você realmente deseja sair do sistema? [S/N]').lower()
+        if confirma == 's':
+            print('Saindo do sistema...')
+            time.sleep(2)
+            exit()
+        else:
+            print('Voltando para o menu principal...')
+            self.menu()
 
     def menu(self):
         os.system('clear')
         print(14 * '---', 'MENU DE OPÇÕES: ', 14 * '---' )
         print()
-        print(f"{'[1]Procurar':<18}{'[2]Cadastrar':<18}{'[3]Editar':<18}{'[4]Visualizar':<18}{'[5]Apagar':<18}{'[6]Sair':<18}")
+        print(f"{'[1]Procurar':<18}{'[2]Cadastrar':<18}{'[3]Editar':<18}", end='')
+        print(f"{'[4]Visualizar':<18}{'[5]Apagar':<18}{'[6]Sair':<18}")
         print()
         print(8 * '----', 'Visitantes cadastrados recentementes', 8 * '----')
-        print(f'{"ID:":<5}{"Nome:":<20}{"Empresa:":<22}{"Documento:":<20}{"Hora/Data:":<30}{"Apt:":<6}')
+        print(f'{"ID:":<5}{"Nome:":<20}{"Empresa:":<22}', end='')
+        print(f'{"Documento:":<20}{"Hora/Data:":<30}{"Apt:":<6}')
         db = sqlite3.connect('conexao.db')
         cursor = db.cursor()
         cursor.execute('SELECT * FROM visitantes')
         lista = cursor.fetchall()
+        lista = lista[-5:]
+        lista.reverse()
         for i in lista:
             print(f'{i[0]:<5}{i[1]:<20}{i[2]:<22}{i[3]:<20}{i[4]:<30}{i[5]:<6}')
 
+        print()
+        acao = int(input('Digite uma ação de 1 a 6: '))
 
-        acao = input('Digite uma ação de 1 a 6: ')
-
-        if acao == '1':
+        if acao == 1:
             self.procurar()
 
-        elif acao == '2':
+        elif acao == 2:
             self.cadastrar()
 
-        elif acao == '3':
+        elif acao == 3:
             self.editar()
 
-        elif acao == '4':
+        elif acao == 4:
             self.visualizar()
 
-        elif acao == '5':
+        elif acao == 5:
             self.deletar()
 
-        elif acao == '6':
+        elif acao == 6:
             self.sair()
 
         else:
