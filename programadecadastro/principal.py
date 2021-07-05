@@ -19,14 +19,10 @@ while True:
         cadastrar()
 
     elif resposta == 2:
-        limpaTela()
-        cabecalho('PESQUISA')
-
-        cpf = input('CPF: ')
-        pesquisar_clinte(cpf)
+        cabecalho('PESQUISAR')
 
     elif resposta == 3:
-        cabecalho('RELATÓRIO')
+        relatorio()
 
     elif resposta == 4:
         cabecalho('EDITAR')

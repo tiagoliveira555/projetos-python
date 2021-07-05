@@ -35,4 +35,5 @@ def menu(msg):
     linha()
 
     res = leiaInt('Qual a opção? ')
+    
     return res
