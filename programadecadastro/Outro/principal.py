@@ -5,15 +5,21 @@ from tela import *
 while True:
     limpaTela()
     resposta = menu([
-    'CADASTRAR CLIENTES',
-    'PESQUISAR CLIENTES',
-    'RELATÓRIO',
-    'EDITAR CLIENTES',
-    'EXCLUIR'
-    ])
+                    'CADASTRAR CLIENTES',
+                    'PESQUISAR CLIENTES',
+                    'RELATÓRIO',
+                    'EDITAR CLIENTES',
+                    'EXCLUIR'
+                    ])
 
     if resposta == 0:
-        break
+        sair = input('Tem certeza que quer sair? [S/N] ').upper()
+        if sair == 'S':
+            print('Fim do programa...')
+            break
+        else:
+            print('Voltando ao programa')
+            input('[ENTER] para continuar...')
 
     elif resposta == 1:
         cadastrar()

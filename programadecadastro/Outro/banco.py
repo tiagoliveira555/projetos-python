@@ -1,5 +1,5 @@
 import sqlite3
-from prettytable import PrettyTable
+from prettytable import from_db_cursor
 
 def criar_banco():
     conexao = sqlite3.connect('programa.db')
@@ -28,7 +28,7 @@ def cadastrar_clientes(nome, endereco, cpf):
     conexao.close()
 
 
-def relatorio_clientes():
+'''def relatorio_clientes():
     conexao = sqlite3.connect('programa.db')
     cursor = conexao.cursor()
     cursor.execute('SELECT * FROM clientes')
@@ -48,3 +48,13 @@ def relatorio_clientes():
 
     cursor.close()
     conexao.close()
+'''
+
+def relatorio_clientes():
+    conexao = sqlite3.connect('programa.db')
+    cursor = conexao.cursor()
+    cursor.execute('SELECT * FROM clientes')
+    tabela = from_db_cursor(cursor)
+
+    print(tabela)
+
