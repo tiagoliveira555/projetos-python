@@ -11,10 +11,10 @@ while True:
         'EXCLUIR CLIENTE'])
 
     if resposta == 0:
-        sair = str(input('\033[33mDeseja realmente sair? [S/N]:\033[m ')).upper()
+        sair = str(input('\033[33mDeseja realmente sair? [S/N]:\033[m ')).upper().split()[0]
         while sair not in 'SN' or sair == '':
             print('Digite S ou N')
-            sair = str(input('\033[33mDeseja realmente sair? [S/N]:\033[m ')).upper()
+            sair = str(input('\033[33mDeseja realmente sair? [S/N]:\033[m ')).upper().split()[0]
             
         if sair == 'S':
             break
@@ -30,7 +30,7 @@ while True:
 
             sair = ''
             while sair not in 'SN' or sair == '':
-                sair = str(input('\033[33mQuer cadastrar outro cliente? [S/N]:\033[m ')).upper()
+                sair = str(input('\033[33mQuer cadastrar outro cliente? [S/N]:\033[m ')).upper().split()[0]
                 print('Digite S ou N')
 
             limpar_tela()
@@ -47,7 +47,7 @@ while True:
     elif resposta == 3:
         limpar_tela()
         cabecalho('PESQUISANDO CLIENTE')
-        cpf = input('CPF: ')
+        cpf = input('\033[33mCPF:\033[m ')
         linha()
         c = pesquisar(cpf)
 
