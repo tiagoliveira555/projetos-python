@@ -51,7 +51,7 @@ def cadastrar_clientes(nome, endereco, cpf):
 '''
 
 def relatorio_clientes():
-    conexao = sqlite3.connect('programa.db')
+    conexao = sqlite3.connect('Outro/programa.db')
     cursor = conexao.cursor()
     cursor.execute('SELECT * FROM clientes')
     tabela = from_db_cursor(cursor)
